@@ -15,9 +15,9 @@ function App() {
   const [selectedModuleName, setSelectedModuleName] = useState('');
   const [selectedIdentifierName, setSelectedIdentifierName] = useState('');
   const [sortOrder, setSortOrder] = useState("newest");
-  const [userIdData, setUserIdData] = useState<string[]>([]);
-  const [machineData, setMachineData] = useState<string[]>([]);
-  const [cewVersion, setCewVersion] = useState ('');
+  const [userIdData, setUserIdData] = useState<unknown[]>([]);
+  const [machineData, setMachineData] = useState<unknown[]>([]);
+  const [cewVersion, setCewVersion] = useState<unknown[]>([]);
   const [startupPath, setStartupPath] = useState("");
   
   const handleFileUpload = (event) => {
