@@ -75,14 +75,16 @@ setContentNameOptions(contentNameOptions);
 
   }, [data]);
   
-  const handleFileUpload = (event: { target: { files: any[]; value: null; }; }) => {
-    const file = event.target.files[0];
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
     setFileName(file.name);
     const reader = new FileReader();
   
     if (file.size > 6 * 1024 * 1024) {
       alert('File size is too large. Please select a file under 6 MB');
-      event.target.value = null;
+      event.target.value = '';
       return;
     }
     let lines;
@@ -146,7 +148,8 @@ lines.forEach((line: string) => {
     };
     reader.readAsText(file);
     const fileSizeInMB = Number(file.size) / (1024 * 1024);
-    setFileSize(fileSizeInMB.toFixed(3));
+    setFileSize(Number(fileSizeInMB.toFixed(3)));
+  }
   };
 
   function resetFilters() {
@@ -226,15 +229,15 @@ lines.forEach((line: string) => {
   };
 
   const handleModuleNameChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-    setSelectedModuleName(event.target.value);
+    setSelectedModuleName(event.target.value || ''); // Use empty string as fallback value
   };
-
+  
   const handleContentNameChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-    setSelectedContentName(event.target.value);
+    setSelectedContentName(event.target.value || ''); // Use empty string as fallback value
   };
-
+  
   const handleContentIDNameChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-    setSelectedContentIDName(event.target.value);
+    setSelectedContentIDName(event.target.value || ''); // Use empty string as fallback value
   };
 
   const handleStartDateChange = (event: { target: { value: any; }; }) => {
@@ -318,15 +321,13 @@ if (sortOrder === "oldest") {
   filteredData.reverse();
 }
 
-  const handleAboutClick = () => {
-    const top = document.getElementById('top');
-    top.scrollIntoView({ behavior: 'smooth' });
-  };
+const handleAboutClick = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
-  const handleContactClick = () => {
-    const bottom = document.getElementById('bottom');
-    bottom.scrollIntoView({ behavior: 'smooth' });
-  };
+const handleContactClick = () => {
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+};
   
   return (
     <Router>
