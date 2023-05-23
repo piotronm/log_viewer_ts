@@ -14,7 +14,7 @@ function App() {
   const [sortOrder, setSortOrder] = useState("newest");
   const [userIdData, setUserIdData] = useState<string[]>([]);
   const [machineData, setMachineData] = useState<string[]>([]);
-  const [cewVersion, setCewVersion] = useState<string>('');
+  const [cewVersion, setCewVersion] = useState<string[]>([]);
   const [startupPath, setStartupPath] = useState("");
   const [moduleNameOptions, setModuleNameOptions] = useState<string[]>([]);
   const [selectedModuleName, setSelectedModuleName] = useState('');
@@ -87,8 +87,8 @@ setContentNameOptions(contentNameOptions);
     }
     let lines;
     reader.onload = () => {
-  lines = reader.result.split('\n');
-  const fileName = file.name; // get the name of the file
+      lines = (reader.result as string).split('\n');
+      const fileName = file.name; // get the name of the file
   const convertedData = lines.map((line: string) => {
     const date = moment.utc(line.slice(0, 23)).tz(moment.tz.guess());
     const restOfLine = line.slice(24);
@@ -145,7 +145,7 @@ lines.forEach((line: string) => {
 });
     };
     reader.readAsText(file);
-    const fileSizeInMB = file.size / (1024 * 1024);
+    const fileSizeInMB = Number(file.size) / (1024 * 1024);
     setFileSize(fileSizeInMB.toFixed(3));
   };
 
@@ -297,9 +297,17 @@ lines.forEach((line: string) => {
   })
   .sort((a, b) => {
     // Sort based on sortOrder
-    const dateA = new Date(a.split(" ")[0] + " " + a.split(" ")[1] + " " + options.timeZone);
-    const dateB = new Date(b.split(" ")[0] + " " + b.split(" ")[1] + " " + options.timeZone);
-    if (sortOrder === "newest") {
+    const dateA = new Date(
+      parseInt(a.split(" ")[0]) + " " +
+      a.split(" ")[1] + " " +
+      options.timeZone
+    );
+    const dateB = new Date(
+      parseInt(b.split(" ")[0]) + " " +
+      b.split(" ")[1] + " " +
+      options.timeZone
+    );
+      if (sortOrder === "newest") {
       return dateB - dateA;
     } else {
       return dateA - dateB;
