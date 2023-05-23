@@ -28,7 +28,7 @@ function App() {
   const moduleNameRegex = /\[([^\[\]]*?[\w-]+[^\[\]]*?)\]/gi;
   const filteredOptions = data.filter(item => moduleNameRegex.test(item));
   // Extract the options within '[' and ']', remove duplicates, and exclude "contentid"
-  const moduleNameOptionsSet = new Set();
+  const moduleNameOptionsSet = new Set<string>(); // Explicitly type the Set
   filteredOptions.forEach(item => {
     const matches = item.match(moduleNameRegex);
     if (matches && matches.length > 0) {
@@ -44,7 +44,7 @@ function App() {
     // Filter data by Content Identifier Name
 const contentIdentifierRegex = /ContentIdentifierName='([^']+)'/g; // Update the regex pattern
 const filteredContentNameOptions = data.filter(item => contentIdentifierRegex.test(item));
-const contentNameOptionsSet = new Set();
+const contentNameOptionsSet = new Set<string>(); // Explicitly type the Set
 filteredContentNameOptions.forEach(item => {
   const matches = item.match(contentIdentifierRegex);
   if (matches && matches.length > 0) {
@@ -60,7 +60,7 @@ setContentNameOptions(contentNameOptions);
     // Filter data by Content ID Name
     const contentIDRegex = /\[contentid-([^[\]]+)\]/gi;
     const filteredContentIDNameOptions = data.filter(item => contentIDRegex.test(item));
-    const contentIDNameOptionsSet = new Set();
+    const contentIDNameOptionsSet = new Set<string>(); // Explicitly type the Set
     filteredContentIDNameOptions.forEach(item => {
       const matches = item.match(contentIDRegex);
       if (matches && matches.length > 0) {
@@ -91,29 +91,29 @@ setContentNameOptions(contentNameOptions);
     reader.onload = () => {
       lines = (reader.result as string).split('\n');
       const fileName = file.name; // get the name of the file
-  const convertedData = lines.map((line: string) => {
+      const convertedData: string[] = lines.map((line: string) => {
     const date = moment.utc(line.slice(0, 23)).tz(moment.tz.guess());
     const restOfLine = line.slice(24);
     const convertedDate = date.tz(moment.tz.guess()).format('YYYY-MM-DD h:mm:ss A');
     const lineWithFileName = `${convertedDate} ${restOfLine} ${fileName}`; // add the file name at the end of each line
     return lineWithFileName;
-  }) as string[]; // Explicitly type convertedData as string[]
+  }) as string[];  // Explicitly type convertedData as string[]
   setData(convertedData);
 
  // Extract user IDs from file
-const userIdsSet = new Set();
+const userIdsSet = new Set<string>(); // Explicitly type the Set
 const userIdRegex = /"Username":\s*"(.+?)"/i;
 lines.forEach((line: string) => {
   const matches = line.match(userIdRegex);
   if (matches && matches[1]) {
-    const userId = matches[1] //.replace('@corp.bankofamerica.com', '');  Remove "@corp.bankofamerica" from the User ID
+    const userId = matches[1];
     userIdsSet.add(userId);
   }
 });
 const userIds = Array.from(userIdsSet);
 setUserIdData(userIds);
 /// Extract machine names from file
-const machineSet = new Set();
+const machineSet = new Set<string>(); // Explicitly type the Set
 const machineRegex = /Machine=([^ ]+)/i;
 lines.forEach((line: string) => {
   const matches = line.match(machineRegex);
@@ -121,11 +121,11 @@ lines.forEach((line: string) => {
     machineSet.add(matches[1]);
   }
 });
-const machines = Array.from(machineSet);
+const machines: string[] = Array.from(machineSet);
 setMachineData(machines);
 
 // Extract CEW Version number from file
-const cewVersions = new Set();
+const cewVersions = new Set<string>(); // Explicitly type the Set
 const cewVersionRegex = /"cewVersion":"([^"]+)"|CEW starting\. CewVersion: ([^ ]+)/i;
 lines.forEach((line: string) => {
   const matches = line.match(cewVersionRegex);
@@ -299,21 +299,12 @@ lines.forEach((line: string) => {
     return true;
   })
   .sort((a, b) => {
-    // Sort based on sortOrder
-    const dateA = new Date(
-      parseInt(a.split(" ")[0]) + " " +
-      a.split(" ")[1] + " " +
-      options.timeZone
-    );
-    const dateB = new Date(
-      parseInt(b.split(" ")[0]) + " " +
-      b.split(" ")[1] + " " +
-      options.timeZone
-    );
-      if (sortOrder === "newest") {
-      return dateB - dateA;
+    const dateA = new Date(a.split(" ")[0] + " " + a.split(" ")[1] + " " + options.timeZone);
+    const dateB = new Date(b.split(" ")[0] + " " + b.split(" ")[1] + " " + options.timeZone);
+    if (sortOrder === "newest") {
+      return dateB.getTime() - dateA.getTime();
     } else {
-      return dateA - dateB;
+      return dateA.getTime() - dateB.getTime();
     }
   });
 
