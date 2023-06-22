@@ -168,7 +168,7 @@ lines.forEach((line: string) => {
     setSelectedContentName('');
     setSelectedModuleName('');
   }
-
+  
   const handleExport = () => {
     const filterInfo = `Filters:
     File name: ${fileName}
@@ -335,6 +335,7 @@ const handleContactClick = () => {
         <input className='upload-file' title='Upload File' type="file" id='file-upload' onChange={handleFileUpload} />
         <input type="text" className="search-input" value={searchTerm} onChange={handleSearchInput} placeholder='Search' />
         <button className='export' onClick={handleExport}>Export</button>
+        <button className='clear-log'onClick={() => window.location.reload()}>Clear Log File</button>
         <button className='reset-filters' onClick={resetFilters}>Reset Filters</button>
       </div>
       <div className='all-dropdowns'>
