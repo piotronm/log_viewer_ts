@@ -42,7 +42,7 @@ function App() {
     a.localeCompare(b, undefined, { sensitivity: 'base' }));
   setModuleNameOptions(sortedModuleNameOptions);
   
-    // Filter data by Content Identifier Name
+// Filter data by Content Identifier Name
 const contentIdentifierRegex = /ContentIdentifierName='([^']+)'/g; // Update the regex pattern
 const filteredContentNameOptions = data.filter(item => contentIdentifierRegex.test(item));
 const contentNameOptionsSet = new Set<string>(); // Explicitly type the Set
@@ -56,9 +56,11 @@ filteredContentNameOptions.forEach(item => {
   }
 });
 const contentNameOptions = Array.from(contentNameOptionsSet);
-setContentNameOptions(contentNameOptions);
+// Sort the options alphabetically
+const sortedContentNameOptions = contentNameOptions.sort((a, b) => a.localeCompare(b));
+setContentNameOptions(sortedContentNameOptions);
      
-    // Filter data by Content ID Name
+    // Filter data by Content ID 
     const contentIDRegex = /\[contentid-([^[\]]+)\]/gi;
     const filteredContentIDNameOptions = data.filter(item => contentIDRegex.test(item));
     const contentIDNameOptionsSet = new Set<string>(); // Explicitly type the Set
